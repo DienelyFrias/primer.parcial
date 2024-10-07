@@ -1,35 +1,16 @@
-name: Node.js CI
+name: Deploy Website
 
-on:
-  push:
-    branches:
-      - main
-      - dev
-  pull_request:
-    branches:
-      - main
-      - dev
+on: [push]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    name: Deploying to surge
+    
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '18'
-
-    - name: Install dependencies
-      run: npm install
-
-
-
-    - name: Reinstall dependencies
-      run: npm ci
-
-    - name: Run tests
-      run: npm test
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install -g surge
+      - run: surge ./ https://primerparcial20230185.surge.sh/ --token ${{ secrets.SURGE_TOKEN }}
